@@ -34,20 +34,7 @@ sentences = []
 for _, row in combined_df.iterrows():
     sentences.append({'text': row['word'], 'language': row['language']})
 
-# Add some English and Taglish samples (from our original)
-english_sentences = [
-    "How are you?", "What is your name?", "Where are you going?", "I love you.",
-    "What time is it?", "I want water.", "Thank you for everything."
-]
-taglish_sentences = [
-    "Ano ba ang name mo?", "Where ka pupunta?", "I love you talaga.",
-    "Ano ba ang time ngayon?", "Gusto ko ng water.", "Thanks sa lahat."
-]
-
-for sent in english_sentences:
-    sentences.append({'text': sent, 'language': 'english'})
-for sent in taglish_sentences:
-    sentences.append({'text': sent, 'language': 'taglish'})
+# Removed English and Taglish samples to focus on 4 Philippine languages
 
 # Shuffle
 random.shuffle(sentences)

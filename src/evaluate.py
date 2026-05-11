@@ -18,10 +18,10 @@ def predict_language(text):
 if __name__ == "__main__":
     test_texts = [
         "Kumusta ka?",
-        "How are you?",
-        "Kamusta ka ba?",
         "Unsa imong ngalan?",
-        "Ano ang iyong pangalan?"
+        "Ano ang iyong pangalan?",
+        "Bantal na ako",
+        "Nagan mo?"
     ]
     for text in test_texts:
         pred, conf = predict_language(text)
