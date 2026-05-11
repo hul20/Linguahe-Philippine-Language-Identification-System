@@ -65,7 +65,6 @@ sample_sentences = {
         "Help me."
     ],
     'taglish': [
-        "Kamusta ka ba?",
         "Ano ba ang name mo?",
         "Saan ka ba pupunta?",
         "I love you talaga.",

@@ -8,7 +8,7 @@ import joblib
 import os
 
 # Load improved data
-data_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'improved_dataset.csv')
+data_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'augmented_dataset.csv')
 df = pd.read_csv(data_path)
 
 # Clean data
