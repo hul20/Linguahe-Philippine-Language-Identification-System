@@ -14,16 +14,16 @@ Luna St., La Paz, Iloilo City 5000
 
 ## 🎯 Overview
 
-The Philippines is a multilingual archipelago with over 180 languages. WikangAI addresses the critical gap in Philippine language identification by providing a web-based system that recognizes **Tagalog, Cebuano, Hiligaynon, Ilocano, English, and Taglish (code-mixed)** text. The system places special emphasis on Hiligaynon, serving as a foundational classification tool for low-resource Philippine languages.
+The Philippines is a multilingual archipelago with over 180 languages. WikangAI addresses the critical gap in Philippine language identification by providing a web-based system that recognizes **Tagalog, Cebuano, Hiligaynon, and Ilocano** text. The system places special emphasis on Hiligaynon, serving as a foundational classification tool for low-resource Philippine languages.
 
 ## 🚀 Features
 
-- **🔍 Multilingual Identification**: Supports 6 Philippine languages/dialects
+- **🔍 Multilingual Identification**: Supports 4 Philippine languages/dialects
 - **🧹 Automated Preprocessing**: Handles unicode, spelling variations, and social media noise
 - **📊 Confidence Visualization**: Interactive bar charts showing probability distributions
 - **🌐 Web Interface**: Clean, responsive UI built with vanilla JavaScript
 - **⚡ FastAPI Backend**: Modern, high-performance REST API with automatic documentation
-- **🤖 Deep Learning Model**: Character-level CNN achieving 73.89% test accuracy
+- **🤖 Deep Learning Model**: Character-level CNN achieving 70% test accuracy
 - **📈 Baseline Model**: Multinomial Naive Bayes with 75% accuracy for comparison
 
 ## 🏗️ Architecture
@@ -57,7 +57,7 @@ The Philippines is a multilingual archipelago with over 180 languages. WikangAI 
 │  │  BASELINE: Multinomial NB + TF-IDF (75% accuracy)    │   │
 │  └──────────────────────────────────────────────────────┘   │
 │  ┌──────────────────────────────────────────────────────┐   │
-│  │  MAIN: Character-level CNN (73.89% test accuracy)    │   │
+│  │  MAIN: Character-level CNN (70% test accuracy)    │   │
 │  │  - Embedding(128) → Conv1D(128) → MaxPool → Dense    │   │
 │  └──────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
@@ -71,8 +71,6 @@ The Philippines is a multilingual archipelago with over 180 languages. WikangAI 
 | **Cebuano** | `cebuano` | ~20M | ✅ Primary |
 | **Hiligaynon** | `hiligaynon` | ~7M | ✅ Primary |
 | **Ilocano** | `ilocano` | ~8M | ✅ Primary |
-| **English** | `english` | N/A | ✅ Secondary |
-| **Taglish** | `taglish` | N/A | ✅ Code-mixed |
 
 ## 🛠️ Technology Stack
 
@@ -157,9 +155,7 @@ The Philippines is a multilingual archipelago with over 180 languages. WikangAI 
     "cebuano": 0.8537,
     "tagalog": 0.1234,
     "hiligaynon": 0.0156,
-    "ilocano": 0.0056,
-    "english": 0.0012,
-    "taglish": 0.0005
+    "ilocano": 0.0056
   }
 }
 ```
@@ -173,22 +169,21 @@ curl -X POST "http://localhost:8001/predict" \
 
 ## 📊 Model Performance
 
-### Test Results (73.89% Accuracy)
+### Test Results (70% Accuracy)
 
 | Language | Precision | Recall | F1-Score | Support |
 |----------|-----------|--------|----------|---------|
-| Cebuano | 0.71 | 0.71 | 0.71 | 9407 |
-| Hiligaynon | 0.46 | 0.30 | 0.37 | 1439 |
-| Ilocano | 0.72 | 0.84 | 0.78 | 1165 |
-| Tagalog | 0.71 | 0.73 | 0.72 | 9076 |
+| Cebuano | 0.71 | 0.71 | 0.71 | 9486 |
+| Hiligaynon | 0.44 | 0.30 | 0.36 | 1420 |
+| Ilocano | 0.74 | 0.84 | 0.79 | 1192 |
+| Tagalog | 0.70 | 0.74 | 0.72 | 8990 |
 
 ### Confusion Matrix
 ```
-[[6723    0  312   90 2282    0]
- [ 632    0  436   44  327    0]
- [  85    0    8  983   89    0]
- [2021    0  186  240 6629    0]
- [   0    1    0    0    1    0]]
+[[6696  347   92 2351]
+ [ 641  427   25  327]
+ [  82    8 1001  101]
+ [1967  180  232 6611]]
 ```
 
 ## 🔧 Development
@@ -236,14 +231,12 @@ python src/cnn_model.py
 | Tagalog | 45,831 | Kaggle, news, social media |
 | Hiligaynon | 7,264 | Kaggle, news, social media |
 | Ilocano | 5,998 | Kaggle, news, social media |
-| English | 17 | Augmentation |
-| Taglish | 21 | Augmentation |
-| **Total** | **105,478** | **Mixed sources** |
+| **Total** | **105,440** | **Mixed sources** |
 
 ## 🎯 Key Achievements
 
 - ✅ **3-Day Development**: Completed full system in 3 days vs 8 weeks
-- ✅ **High Accuracy**: 73.89% on character-level CNN
+- ✅ **High Accuracy**: 70% on character-level CNN for 4 Philippine languages
 - ✅ **Modern Stack**: FastAPI + TensorFlow + Vanilla JS
 - ✅ **Production Ready**: CORS-enabled, error handling, responsive UI
 - ✅ **Philippine Focus**: Special emphasis on Hiligaynon and regional languages
