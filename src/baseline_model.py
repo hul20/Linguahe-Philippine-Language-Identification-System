@@ -7,9 +7,13 @@ from sklearn.metrics import classification_report, confusion_matrix
 import joblib
 import os
 
-# Load data
-data_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'sample_dataset.csv')
+# Load improved data
+data_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'improved_dataset.csv')
 df = pd.read_csv(data_path)
+
+# Clean data
+df = df.dropna(subset=['text', 'language'])  # Remove rows with missing text or language
+df['text'] = df['text'].astype(str)  # Ensure text is string
 
 # Preprocess
 from preprocess import preprocess
