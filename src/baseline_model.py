@@ -23,9 +23,10 @@ df['text'] = df['text'].apply(preprocess)
 X_train, X_test, y_train, y_test = train_test_split(df['text'], df['language'], test_size=0.2, random_state=42)
 
 # Model
+from sklearn.feature_extraction.text import TfidfVectorizer
 pipeline = Pipeline([
-    ('vectorizer', CountVectorizer(analyzer='char', ngram_range=(2, 5), max_features=10000)),
-    ('classifier', MultinomialNB(alpha=0.1))
+    ('vectorizer', TfidfVectorizer(analyzer='char', ngram_range=(2, 5), max_features=20000, sublinear_tf=True)),
+    ('classifier', MultinomialNB(alpha=0.01))
 ])
 
 # Train
