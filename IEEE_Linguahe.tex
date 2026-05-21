@@ -94,8 +94,32 @@ Total & 105440 \\
 \end{tabular}
 \end{table}
 
+\begin{figure}[htbp]
+\centering
+\fbox{\parbox{0.9\linewidth}{
+\textbf{Corpus Flow:} Kaggle Filipino Word-Sentiment Dictionary $\rightarrow$ Language filtering (Tagalog/Cebuano/Hiligaynon/Ilocano) $\rightarrow$ Label consolidation $\rightarrow$ Unified corpus
+}}
+\caption{Training corpus assembly pipeline.}
+\label{fig:corpus-flow}
+\end{figure}
+
+\subsection{Training Corpora Selection}
+To ensure coverage of regional Philippine languages, the training corpus was selected from the Kaggle ``Filipino Word-Sentiment Dictionary'' dataset (https://www.kaggle.com/datasets/abeperez/filipino-wordsentiment-dictionary). Cebuano, Tagalog, Hiligaynon, and Ilocano texts were consolidated into a unified corpus with consistent labeling. The focus was on common lexical patterns and everyday vocabulary to maximize generalization to short user inputs and headlines.
+
 \subsection{Preprocessing Rules}
 The pipeline lowercases and normalizes Unicode (NFC), removes diacritics, strips URLs/mentions/hashtags, removes digits and non-essential punctuation, normalizes whitespace, and applies Hiligaynon spelling normalization.
+
+\begin{figure}[htbp]
+\centering
+\fbox{\parbox{0.9\linewidth}{
+\textbf{Preprocessing Flow:} Raw text $\rightarrow$ Lowercase + Unicode normalize $\rightarrow$ Remove noise (URLs/mentions/hashtags) $\rightarrow$ Remove digits/punct. $\rightarrow$ Normalize whitespace $\rightarrow$ Spelling normalization
+}}
+\caption{Text preprocessing pipeline.}
+\label{fig:preprocess-flow}
+\end{figure}
+
+\subsection{NLP Task and Implementation}
+The core NLP task is multi-class language identification. Given an input string, the system predicts one of four languages using a character-level representation, which is robust to misspellings and out-of-vocabulary words. Implementation is performed by character tokenization, sequence padding to a fixed length, and inference through a CNN classifier that outputs softmax probabilities across classes.
 
 \subsection{Model Architecture}
 \begin{table}[htbp]
@@ -118,11 +142,44 @@ Dense & (4) & Softmax \\
 \end{tabular}
 \end{table}
 
+\begin{figure}[htbp]
+\centering
+\fbox{\parbox{0.9\linewidth}{
+\textbf{CNN Blocks:} Embedding $\rightarrow$ Conv1D + ReLU $\rightarrow$ MaxPool $\rightarrow$ Conv1D + ReLU $\rightarrow$ GlobalMaxPool $\rightarrow$ Dense + Dropout $\rightarrow$ Softmax
+}}
+\caption{High-level CNN architecture blocks.}
+\label{fig:cnn-blocks}
+\end{figure}
+
+\subsection{Model Training and Development}
+Model development begins with preprocessing and character tokenization. Labels are encoded using a label encoder, and sequences are padded to a fixed length. The CNN is trained with early stopping on validation accuracy to avoid overfitting, and artifacts (model, tokenizer, encoder) are saved for deployment. A baseline TF-IDF + MultinomialNB model is also trained for comparison.
+
+\begin{figure}[htbp]
+\centering
+\fbox{\parbox{0.9\linewidth}{
+\textbf{Training Workflow:} Preprocess $\rightarrow$ Tokenize $\rightarrow$ Pad sequences $\rightarrow$ Train CNN $\rightarrow$ Validate $\rightarrow$ Save artifacts
+}}
+\caption{Model training and artifact saving workflow.}
+\label{fig:training-flow}
+\end{figure}
+
 \subsection{Training Setup}
 Training uses an 80/20 train-test split with stratification. The model uses a 50-character max sequence length, Adam optimizer with sparse categorical cross-entropy, batch size 64, and 10 epochs with early stopping (patience=3).
 
 \subsection{Evaluation Metrics}
 The system reports accuracy and per-class precision, recall, and F1-score. The current CNN achieves approximately 70\% accuracy on the held-out test set. Confusion matrix analysis is used to inspect error patterns among closely related languages.
+
+\begin{figure}[htbp]
+\centering
+\fbox{\parbox{0.9\linewidth}{
+\textbf{Evaluation Flow:} Split data $\rightarrow$ Train $\rightarrow$ Predict on test set $\rightarrow$ Compute metrics + confusion matrix
+}}
+\caption{Evaluation and reporting workflow.}
+\label{fig:eval-flow}
+\end{figure}
+
+\subsection{Model Evaluation and Analysis}
+Evaluation uses a stratified train-test split to preserve class proportions. Performance is assessed with classification reports and confusion matrices to identify confusion between Cebuano and Hiligaynon, which share orthographic patterns. Error inspection informs preprocessing adjustments and motivates future improvements such as multi-kernel CNNs and confidence calibration.
 
 \subsection{API Specification}
 \textbf{Endpoint:} \texttt{POST /predict}
