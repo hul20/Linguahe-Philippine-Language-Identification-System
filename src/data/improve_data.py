@@ -20,53 +20,6 @@ def strip_pos_prefix(text):
     return text.split(',')[0].strip()
 
 
-def extract_hiligaynon_from_definition(definition):
-    """
-    Option B: Extract Hiligaynon example sentences embedded in English definitions.
-    Definitions often interleave Hiligaynon example sentences with English translations,
-    e.g. "NagbA3og ang itlog. The egg is bad."
-    We look for sentence fragments that start with known Hiligaynon-starter words and
-    do NOT start with common English words.
-    """
-    if not isinstance(definition, str):
-        return []
-
-    sentences = re.split(r'(?<=[.!?])\s+', definition)
-    results = []
-
-    hil_starters = re.compile(
-        r'^(Ang|Gin|Nag|Indi|Wala|Sang|Mag|Ini|Kon|Dili|Siya|Kita|Amo|Ila|May|Si\s|Da|Ini|Iya|Aton)',
-        re.IGNORECASE
-    )
-    eng_starters = re.compile(
-        r'^(The\s|A\s|An\s|This|That|It\s|He\s|She\s|They|We\s|I\s|You|To\s|In\s|On\s|Of\s|For|With|From|See\s|Used|Also|Place|Said|Often|Very|When)',
-        re.IGNORECASE
-    )
-
-    for sentence in sentences:
-        sentence = sentence.strip().rstrip('.')
-        # Must be at least 8 chars and at most 80 (avoid huge long sentences)
-        if len(sentence) < 8 or len(sentence) > 80:
-            continue
-        if hil_starters.match(sentence) and not eng_starters.match(sentence):
-            results.append(sentence)
-
-    return results
-
-
-def generate_phrase_combinations(word_list, bigram_limit=2000, trigram_limit=1000):
-    """Slide a window over the word list to produce 2-word and 3-word phrases.
-    These multi-word patterns are much more language-discriminative than single words."""
-    bigrams, trigrams = [], []
-    for i in range(len(word_list) - 1):
-        bigrams.append(f"{word_list[i]} {word_list[i+1]}")
-    for i in range(len(word_list) - 2):
-        trigrams.append(f"{word_list[i]} {word_list[i+1]} {word_list[i+2]}")
-    random.shuffle(bigrams)
-    random.shuffle(trigrams)
-    return bigrams[:bigram_limit] + trigrams[:trigram_limit]
-
-
 # ─────────────────────────────────────────────────────────────
 # Load Tagalog & Cebuano  (word column = native word)
 # ─────────────────────────────────────────────────────────────
@@ -79,8 +32,11 @@ for file, lang in [('Tagalog Word Sentiments Full.csv', 'tagalog'),
     df = df[df['word'].astype(str).str.len() > 3]   # drop noise
     df['text'] = df['word'].astype(str)
     df['language'] = lang
+    # Downsample to 15K to reduce class imbalance with Hiligaynon
+    if len(df) > 15000:
+        df = df.sample(n=15000, random_state=42)
     data.append(df[['text', 'language']])
-    print(f"  {lang}: {len(df)} samples (after noise filter)")
+    print(f"  {lang}: {len(df)} samples (downsampled)")
 
 # ─────────────────────────────────────────────────────────────
 # Load Ilocano  (definition column = actual Ilocano text)
@@ -104,24 +60,9 @@ hil_raw = hil_raw[hil_raw['word'].astype(str).str.len() > 3]
 hil_words = hil_raw['word'].astype(str).tolist()
 print(f"\n  hiligaynon base words (after noise filter): {len(hil_words)}")
 
-hiligaynon_samples = list(hil_words)
-
-# 2. Option B — extract Hiligaynon sentences from the definition column
-extracted = []
-for definition in hil_raw['definition']:
-    extracted.extend(extract_hiligaynon_from_definition(definition))
-print(f"  hiligaynon phrases extracted from definitions: {len(extracted)}")
-hiligaynon_samples.extend(extracted)
-
-# 3. Generate 2-word and 3-word phrase combinations (sliding window)
-phrases = generate_phrase_combinations(hil_words, bigram_limit=2000, trigram_limit=1000)
-print(f"  hiligaynon n-gram phrases generated: {len(phrases)}")
-hiligaynon_samples.extend(phrases)
-
-print(f"  hiligaynon total samples (no upsampling): {len(hiligaynon_samples)}")
-
-hil_df = pd.DataFrame({'text': hiligaynon_samples, 'language': 'hiligaynon'})
+hil_df = pd.DataFrame({'text': hil_raw['word'].astype(str).tolist(), 'language': 'hiligaynon'})
 data.append(hil_df)
+print(f"  hiligaynon: {len(hil_df)} samples (real words only)")
 
 # ─────────────────────────────────────────────────────────────
 # Combine, shuffle, save

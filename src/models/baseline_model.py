@@ -27,7 +27,7 @@ X_train, X_test, y_train, y_test = train_test_split(df['text'], df['language'], 
 # Model — ComplementNB is designed for imbalanced text classification
 pipeline = Pipeline([
     ('vectorizer', TfidfVectorizer(analyzer='char', ngram_range=(2, 6), max_features=30000, sublinear_tf=True)),
-    ('classifier', ComplementNB(alpha=0.1))
+    ('classifier', ComplementNB(alpha=0.5))
 ])
 
 # Train
