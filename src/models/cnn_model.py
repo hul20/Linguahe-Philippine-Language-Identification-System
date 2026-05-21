@@ -11,7 +11,7 @@ import joblib
 import os
 
 # Load data
-data_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'improved_dataset.csv')
+data_path = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'improved_dataset.csv')
 df = pd.read_csv(data_path)
 
 # Clean data
@@ -67,9 +67,9 @@ loss, accuracy = model.evaluate(X_test, y_test)
 print(f"Test Accuracy: {accuracy:.4f}")
 
 # Save model and artifacts
-model_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'cnn_model.h5')
-tokenizer_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'tokenizer.pkl')
-le_path = os.path.join(os.path.dirname(__file__), '..', 'models', 'label_encoder.pkl')
+model_path = os.path.join(os.path.dirname(__file__), '..', '..', 'models', 'cnn_model.h5')
+tokenizer_path = os.path.join(os.path.dirname(__file__), '..', '..', 'models', 'tokenizer.pkl')
+le_path = os.path.join(os.path.dirname(__file__), '..', '..', 'models', 'label_encoder.pkl')
 
 model.save(model_path)
 joblib.dump(tokenizer, tokenizer_path)

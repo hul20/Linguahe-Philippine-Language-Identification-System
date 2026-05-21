@@ -3,239 +3,337 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linguahe - Philippine Language Identification</title>
+    <title>Linguahe AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #1e1e1e;
+            --container-bg: #2d2d2d;
+            --text-primary: #ededed;
+            --text-secondary: #9ca3af;
+            --border-color: #3f3f46;
+            --accent-color: #d97757; 
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', system-ui, sans-serif; }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 80px 20px 40px;
         }
-        .container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #2c3e50;
+
+        .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 48px;
+            margin-top: 96px;
+            animation: fadeIn 0.6s ease;
         }
-        .input-group {
-            margin-bottom: 20px;
+
+        .logo-icon {
+            color: var(--accent-color);
+            font-size: 34px;
+            margin-bottom: 12px;
+            display: inline-block;
         }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+
+        h1 {
+            font-size: 28px;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            color: #f9f9f9;
         }
+
+        .input-wrapper {
+            width: 100%;
+            max-width: 680px;
+            background: var(--container-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .input-wrapper:focus-within {
+            border-color: #52525b;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
         textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            resize: vertical;
-        }
-        button {
-            background-color: #3498db;
-            color: white;
-            padding: 12px 30px;
+            background: transparent;
             border: none;
-            border-radius: 5px;
+            color: var(--text-primary);
+            padding: 16px 20px;
+            font-size: 15.5px;
+            resize: none;
+            outline: none;
+            min-height: 100px;
+            line-height: 1.5;
+        }
+        
+        textarea::placeholder {
+            color: #71717a;
+        }
+
+        .action-bar {
+            padding: 8px 16px 12px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .send-btn {
+            background-color: #ededed;
+            color: #1e1e1e;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 14px;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-        }
-        button:hover {
-            background-color: #2980b9;
-        }
-        button:disabled {
-            background-color: #bdc3c7;
-            cursor: not-allowed;
-        }
-        .result {
-            margin-top: 30px;
-            padding: 20px;
-            border-radius: 5px;
-            display: none;
-        }
-        .success {
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-        }
-        .error {
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-        }
-        .confidence {
-            margin-top: 15px;
-        }
-        .confidence-bar {
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            margin-bottom: 5px;
+            gap: 6px;
         }
-        .confidence-label {
+
+        .send-btn:hover { background-color: #ffffff; }
+
+        .send-btn:disabled {
+            background-color: #3f3f46;
+            color: #a1a1aa;
+            cursor: not-allowed;
+        }
+
+        .result-container {
+            width: 100%;
+            max-width: 680px;
+            margin-top: 32px;
+            display: none;
+        }
+
+        .result-card {
+            background: var(--container-bg);
+            border-radius: 12px;
+            padding: 24px 32px;
+            border: 1px solid var(--border-color);
+            animation: slideUp 0.3s ease;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        
+        .predicted-lang {
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .status-badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        
+        .status-confident { background: rgba(16, 185, 129, 0.1); color: var(--success-color); }
+        .status-uncertain { background: rgba(245, 158, 11, 0.1); color: var(--warning-color); }
+
+        .confidence-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .confidence-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .conf-label {
             width: 100px;
-            font-weight: bold;
+            font-size: 14.5px;
+            color: var(--text-primary);
+            font-weight: 400;
         }
-        .confidence-value {
-            margin-left: 10px;
-            font-weight: bold;
-        }
-        .bar {
+
+        .conf-bar-bg {
             flex: 1;
-            height: 20px;
-            background-color: #ecf0f1;
-            border-radius: 10px;
-            margin-left: 10px;
+            height: 6px;
+            background: #404040;
+            border-radius: 3px;
             overflow: hidden;
         }
-        .bar-fill {
+
+        .conf-bar-fill {
             height: 100%;
-            background-color: #3498db;
-            transition: width 0.3s ease;
+            background: #737373;
+            border-radius: 3px;
+            transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .loading {
-            text-align: center;
-            color: #7f8c8d;
+        
+        .primary-fill { background: var(--accent-color); }
+
+        .conf-val {
+            width: 45px;
+            text-align: right;
+            font-size: 13.5px;
+            color: var(--text-secondary);
         }
-        .warning {
-            background-color: #fff3cd;
-            border: 1px solid #ffeeba;
-            color: #856404;
+
+        .error-msg {
+            color: #ef4444;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .result-meta {
-            font-size: 14px;
-            color: #6c757d;
-            margin-top: 6px;
-        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🗣️ Linguahe</h1>
-        <p style="text-align: center; color: #7f8c8d; margin-bottom: 30px;">
-            Philippine Language Identification System
-        </p>
-
-        <div class="input-group">
-            <label for="text-input">Enter text to identify the language:</label>
-            <textarea id="text-input" rows="4" placeholder="Type or paste Filipino text here..."></textarea>
-        </div>
-
-        <button id="predict-btn" onclick="predictLanguage()">Identify Language</button>
-
-        <div id="result" class="result">
-            <h3>Prediction Result:</h3>
-            <p id="prediction"></p>
-            <div class="confidence">
-                <h4>Confidence Scores:</h4>
-                <div id="confidence-bars"></div>
-            </div>
+    <div class="header">
+        <div style="display: inline-flex; flex-direction: row; align-items: center; gap: 8px;">
+        <div class="logo-icon">✹</div>
+        <h1>Linguahe AI</h1>
         </div>
     </div>
 
+    <div class="input-wrapper">
+        <textarea id="text-input" placeholder="How can I help you today? Type some text here..." autofocus oninput="autoResize(this)"></textarea>
+        <div class="action-bar">
+            <button id="predict-btn" class="send-btn" onclick="predictLanguage()">
+                Analyze
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div id="result-container" class="result-container"></div>
+
     <script>
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = (textarea.scrollHeight) + 'px';
+        }
+
         async function predictLanguage() {
             const textInput = document.getElementById('text-input');
             const predictBtn = document.getElementById('predict-btn');
-            const resultDiv = document.getElementById('result');
-
+            const resultDiv = document.getElementById('result-container');
             const text = textInput.value.trim();
-            if (!text) {
-                alert('Please enter some text to analyze.');
-                return;
-            }
+            
+            if (!text) return;
 
-            // Show loading state
             predictBtn.disabled = true;
-            predictBtn.textContent = 'Analyzing...';
-            resultDiv.style.display = 'block';
-            resultDiv.className = 'result loading';
-            resultDiv.innerHTML = `
-                <h3>Prediction Result:</h3>
-                <p>Analyzing your text...</p>
-                <div class="confidence" style="display: none;">
-                    <h4>Confidence Scores:</h4>
-                    <div id="confidence-bars"></div>
-                </div>
-            `;
+            predictBtn.innerHTML = 'Analyzing...';
+            resultDiv.style.display = 'none';
 
             try {
-                const response = await fetch('http://localhost:8001/predict', {
+                const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                    ? 'http://localhost:8001'
+                    : window.location.origin;
+                const response = await fetch(`${API_BASE}/predict`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ text: text }),
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: text })
                 });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
+                if (!response.ok) throw new Error(`Server responded with ` + response.status);
                 const data = await response.json();
 
-                // Display result
-                const displayLanguage = data.language === 'uncertain'
-                    ? 'Uncertain'
-                    : data.language.charAt(0).toUpperCase() + data.language.slice(1);
-                const topLanguage = data.top_language
-                    ? data.top_language.charAt(0).toUpperCase() + data.top_language.slice(1)
-                    : displayLanguage;
-                const threshold = data.confidence_threshold !== undefined
-                    ? (data.confidence_threshold * 100).toFixed(0)
-                    : null;
+                const displayLanguage = data.language === 'uncertain' ? 'Uncertain' : data.language.charAt(0).toUpperCase() + data.language.slice(1);
+                const badgeClass = data.is_confident ? 'status-confident' : 'status-uncertain';
+                const badgeText = data.is_confident ? 'Confident' : 'Uncertain';
 
-                resultDiv.className = data.is_confident ? 'result success' : 'result warning';
-                resultDiv.style.display = 'block';
+                let confHTML = '';
+                let index = 0;
+                
+                Object.entries(data.confidence)
+                    .sort(([,a], [,b]) => b - a)
+                    .forEach(([lang, conf]) => {
+                        const percentage = (conf * 100).toFixed(1);
+                        const isPrimary = index === 0;
+                        confHTML += `
+                            <div class="confidence-item">
+                                <span class="conf-label">${lang.charAt(0).toUpperCase() + lang.slice(1)}</span>
+                                <div class="conf-bar-bg">
+                                    <div class="conf-bar-fill ${isPrimary ? 'primary-fill' : ''}" style="width: ${percentage}%"></div>
+                                </div>
+                                <span class="conf-val">${percentage}%</span>
+                            </div>
+                        `;
+                        index++;
+                    });
+
                 resultDiv.innerHTML = `
-                    <h3>Prediction Result:</h3>
-                    <p>Predicted Language: ${displayLanguage}</p>
-                    ${data.is_confident ? '' : `<div class="result-meta">Top guess: ${topLanguage} (below ${threshold}% confidence)</div>`}
-                    <div class="confidence">
-                        <h4>Confidence Scores:</h4>
-                        <div id="confidence-bars">${Object.entries(data.confidence)
-                            .sort(([,a], [,b]) => b - a)
-                            .map(([lang, conf]) => {
-                                const percentage = (conf * 100).toFixed(1);
-                                return `
-                                    <div class="confidence-bar">
-                                        <span class="confidence-label">${lang.charAt(0).toUpperCase() + lang.slice(1)}</span>
-                                        <span class="confidence-value">${percentage}%</span>
-                                        <div class="bar">
-                                            <div class="bar-fill" style="width: ${percentage}%"></div>
-                                        </div>
-                                    </div>
-                                `;
-                            }).join('')}</div>
+                    <div class="result-card">
+                        <div class="result-header">
+                            <div class="predicted-lang">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-color)">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                                ${displayLanguage}
+                            </div>
+                            <span class="status-badge ${badgeClass}">${badgeText}</span>
+                        </div>
+                        <div class="confidence-list">
+                            ${confHTML}
+                        </div>
                     </div>
                 `;
-
             } catch (error) {
-                resultDiv.className = 'result error';
-                resultDiv.style.display = 'block';
                 resultDiv.innerHTML = `
-                    <h3>Prediction Result:</h3>
-                    <p>Error: ${error.message}. Make sure the API server is running.</p>
-                    <div class="confidence" style="display: none;">
-                        <h4>Confidence Scores:</h4>
-                        <div id="confidence-bars"></div>
+                    <div class="result-card">
+                        <div class="error-msg">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                            ${error.message}. Is the API running?
+                        </div>
                     </div>
                 `;
             } finally {
+                resultDiv.style.display = 'block';
                 predictBtn.disabled = false;
-                predictBtn.textContent = 'Identify Language';
+                predictBtn.innerHTML = `
+                    Analyze
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                `;
             }
         }
 
-        // Allow Enter key to trigger prediction
         document.getElementById('text-input').addEventListener('keypress', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
