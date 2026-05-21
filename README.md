@@ -120,7 +120,7 @@ The Philippines is a multilingual archipelago with over 180 languages. Linguahe 
 
 4. **Start the API server**
    ```bash
-   python src/api.py
+   python src/api/app.py
    ```
    Server will run on `http://localhost:8001`
 
