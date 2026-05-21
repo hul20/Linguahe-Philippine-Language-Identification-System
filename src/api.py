@@ -17,6 +17,7 @@ tokenizer = joblib.load(tokenizer_path)
 le = joblib.load(le_path)
 
 max_len = 50  # Same as training
+confidence_threshold = 0.6
 
 # Import preprocess
 from preprocess import preprocess
@@ -38,6 +39,9 @@ class PredictRequest(BaseModel):
 class PredictResponse(BaseModel):
     language: str
     confidence: dict
+    top_language: str
+    is_confident: bool
+    confidence_threshold: float
 
 @app.post("/predict", response_model=PredictResponse)
 async def predict_language(request: PredictRequest):
@@ -53,11 +57,21 @@ async def predict_language(request: PredictRequest):
         pred = model.predict(padded)[0]
         pred_class_idx = np.argmax(pred)
         pred_class = le.inverse_transform([pred_class_idx])[0]
+        top_confidence = float(pred[pred_class_idx])
         
         # Confidence
         confidence = {le.inverse_transform([i])[0]: float(prob) for i, prob in enumerate(pred)}
         
-        return PredictResponse(language=pred_class, confidence=confidence)
+        is_confident = top_confidence >= confidence_threshold
+        display_language = pred_class if is_confident else "uncertain"
+
+        return PredictResponse(
+            language=display_language,
+            confidence=confidence,
+            top_language=pred_class,
+            is_confident=is_confident,
+            confidence_threshold=confidence_threshold
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

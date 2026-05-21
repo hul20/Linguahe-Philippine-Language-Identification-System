@@ -105,6 +105,16 @@
             text-align: center;
             color: #7f8c8d;
         }
+        .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+        }
+        .result-meta {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 6px;
+        }
     </style>
 </head>
 <body>
@@ -173,11 +183,22 @@
                 const data = await response.json();
 
                 // Display result
-                resultDiv.className = 'result success';
+                const displayLanguage = data.language === 'uncertain'
+                    ? 'Uncertain'
+                    : data.language.charAt(0).toUpperCase() + data.language.slice(1);
+                const topLanguage = data.top_language
+                    ? data.top_language.charAt(0).toUpperCase() + data.top_language.slice(1)
+                    : displayLanguage;
+                const threshold = data.confidence_threshold !== undefined
+                    ? (data.confidence_threshold * 100).toFixed(0)
+                    : null;
+
+                resultDiv.className = data.is_confident ? 'result success' : 'result warning';
                 resultDiv.style.display = 'block';
                 resultDiv.innerHTML = `
                     <h3>Prediction Result:</h3>
-                    <p>Predicted Language: ${data.language.charAt(0).toUpperCase() + data.language.slice(1)}</p>
+                    <p>Predicted Language: ${displayLanguage}</p>
+                    ${data.is_confident ? '' : `<div class="result-meta">Top guess: ${topLanguage} (below ${threshold}% confidence)</div>`}
                     <div class="confidence">
                         <h4>Confidence Scores:</h4>
                         <div id="confidence-bars">${Object.entries(data.confidence)
