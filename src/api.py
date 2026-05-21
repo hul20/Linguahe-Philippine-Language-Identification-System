@@ -21,7 +21,7 @@ max_len = 50  # Same as training
 # Import preprocess
 from preprocess import preprocess
 
-app = FastAPI(title="WikangAI API", description="Philippine Language Identification System")
+app = FastAPI(title="Linguahe API", description="Philippine Language Identification System")
 
 # Add CORS middleware
 app.add_middleware(
@@ -63,7 +63,7 @@ async def predict_language(request: PredictRequest):
 
 @app.get("/")
 async def root():
-    return {"message": "WikangAI API - Philippine Language Identification"}
+    return {"message": "Linguahe API - Philippine Language Identification"}
 
 if __name__ == "__main__":
     import uvicorn

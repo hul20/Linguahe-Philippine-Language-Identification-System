@@ -1,12 +1,12 @@
 
-# Software Documentation: WikangAI
+# Software Documentation: Linguahe
 
 **College of Information and Communications Technology**
 West Visayas State University
 Luna St., La Paz, Iloilo City 5000
 
 **Course:** CCS 249 – Natural Language Processing
-**Project Title:** WikangAI: Philippine Language Identification System
+**Project Title:** Linguahe: Philippine Language Identification System
 **Team Members:** Kirk Henrich Cambel Gamo, Clarence Anthony Bolivar, Jullian Bilan, and Jan Floyd Vallota
 
 
@@ -15,12 +15,12 @@ Luna St., La Paz, Iloilo City 5000
 ## I. Overview and Introduction
 
 ### 1. App Name
-**WikangAI**
+**Linguahe**
 
 ### 2. Purpose
 The Philippines is a multilingual archipelago with over 180 languages. In Western Visayas alone, Hiligaynon is spoken by approximately 7 million people, alongside Kinaray-a, Akeanon, and Cebuano. Currently, no existing NLP tool can reliably identify Hiligaynon text. This creates a critical gap where government agencies cannot automatically localize disaster alerts, educational platforms cannot serve content in the correct regional language, and researchers cannot build downstream NLP tools without first solving language identification.
 
-WikangAI addresses this by providing a web-based language identification system that recognizes **Tagalog, Cebuano, Hiligaynon, Ilocano, English, and Taglish (code-mixed)**. The system places special emphasis on Hiligaynon, serving as a foundational classification tool for low-resource Philippine languages.
+Linguahe addresses this by providing a web-based language identification system that recognizes **Tagalog, Cebuano, Hiligaynon, Ilocano, English, and Taglish (code-mixed)**. The system places special emphasis on Hiligaynon, serving as a foundational classification tool for low-resource Philippine languages.
 
 ### 3. Technology Stack
 * **Backend:** Flask (v2.3.x)

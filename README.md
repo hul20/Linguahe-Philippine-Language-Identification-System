@@ -1,4 +1,4 @@
-# WikangAI: Philippine Language Identification System
+# Linguahe: Philippine Language Identification System
 
 [![Python](https://img.shields.io/badge/Python-3.13-blue.svg)](https://www.python.org/)
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.21-orange.svg)](https://www.tensorflow.org/)
@@ -14,7 +14,7 @@ Luna St., La Paz, Iloilo City 5000
 
 ## 🎯 Overview
 
-The Philippines is a multilingual archipelago with over 180 languages. WikangAI addresses the critical gap in Philippine language identification by providing a web-based system that recognizes **Tagalog, Cebuano, Hiligaynon, and Ilocano** text. The system places special emphasis on Hiligaynon, serving as a foundational classification tool for low-resource Philippine languages.
+The Philippines is a multilingual archipelago with over 180 languages. Linguahe addresses the critical gap in Philippine language identification by providing a web-based system that recognizes **Tagalog, Cebuano, Hiligaynon, and Ilocano** text. The system places special emphasis on Hiligaynon, serving as a foundational classification tool for low-resource Philippine languages.
 
 ## 🚀 Features
 
@@ -102,8 +102,8 @@ The Philippines is a multilingual archipelago with over 180 languages. WikangAI 
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-org/wikangai.git
-   cd wikangai
+   git clone https://github.com/your-org/linguahe.git
+   cd linguahe
    ```
 
 2. **Create virtual environment**
@@ -190,7 +190,7 @@ curl -X POST "http://localhost:8001/predict" \
 
 ### Project Structure
 ```
-wikangai/
+linguahe/
 ├── data/                 # Datasets and preprocessing
 ├── models/              # Trained models and artifacts
 ├── src/                 # Source code

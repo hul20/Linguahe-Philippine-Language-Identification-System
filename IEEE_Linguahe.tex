@@ -1,0 +1,101 @@
+\documentclass[conference]{IEEEtran}
+
+\title{Linguahe: Philippine Language Identification System}
+
+\author{\IEEEauthorblockN{Kirk Henrich Cambel Gamo, Clarence Anthony Bolivar, Jullian Bilan, Jan Floyd Vallota}\\
+\IEEEauthorblockA{College of Information and Communications Technology\\
+West Visayas State University\\
+Luna St., La Paz, Iloilo City 5000}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Linguahe is a web-based language identification system focused on Philippine languages. It classifies text into Tagalog, Cebuano, Hiligaynon, or Ilocano using a character-level CNN and a preprocessing pipeline designed for low-resource language variation. The system targets real-world inputs such as news headlines and short user messages, where spelling variation and shared vocabulary are common. This document summarizes the technical aspects, functional requirements, and roadmap of the developed system.
+\end{abstract}
+
+\section{Overview and Introduction}
+\subsection{App Name}
+Linguahe
+
+\subsection{Purpose}
+The Philippines is a multilingual country with many low-resource languages. Linguahe addresses the lack of reliable language identification tools for regional Philippine languages, especially Hiligaynon, by providing a web-based classifier that supports Tagalog, Cebuano, Hiligaynon, and Ilocano. The system is designed as a lightweight, local deployment that can be embedded in downstream applications such as content routing, localization pipelines, and language-specific NLP workflows.
+
+\subsection{Technology Stack (with Versions)}
+The system is implemented using a modern Python ML stack and a lightweight web frontend. All components are locally deployable to meet classroom and offline constraints.
+\textbf{Backend and ML:}
+\begin{itemize}
+    \item Python 3.13
+    \item FastAPI 0.136
+    \item TensorFlow 2.21
+    \item Keras 3.14
+    \item scikit-learn 1.3+
+    \item pandas 2.0+
+    \item numpy 2.0+
+    \item joblib 1.3+
+\end{itemize}
+
+\textbf{Data and Utilities:}
+\begin{itemize}
+    \item beautifulsoup4 4.12+
+    \item datasets 2.0+
+    \item requests 2.31+
+\end{itemize}
+
+\textbf{Frontend:}
+\begin{itemize}
+    \item HTML5, CSS3, Vanilla JavaScript (ES6)
+\end{itemize}
+
+\textbf{Model Artifacts:}
+\begin{itemize}
+    \item CNN model saved in HDF5 format (\texttt{.h5})
+    \item Tokenizer and label encoder serialized with joblib (\texttt{.pkl})
+\end{itemize}
+
+\section{Functional Requirements}
+This section outlines the functional scope implemented in the prototype, including user-facing features, preprocessing logic, and API behaviors.
+\subsection{Core Features with Descriptions}
+\begin{itemize}
+    \item \textbf{Multilingual Text Identification:} Accepts user input and classifies the text into one of four supported languages with a softmax score per class.
+    \item \textbf{Automated Preprocessing Pipeline:} Normalizes unicode, removes noise (URLs, mentions, hashtags), strips digits and excessive punctuation, and standardizes Hiligaynon spelling variations.
+    \item \textbf{Confidence Scoring Display:} Returns a probability distribution across all languages and renders it as a bar chart in the UI.
+    \item \textbf{API Communication:} Exposes a REST endpoint (\texttt{/predict}) for inference, allowing direct use from scripts or the browser UI.
+    \item \textbf{Web Interface:} Provides a single-page interface with a textarea for input, a prediction card, and visual confidence bars.
+\end{itemize}
+
+\subsection{Libraries/Packages}
+The following libraries are required to run training, evaluation, and inference in the system:
+\begin{itemize}
+    \item \textbf{FastAPI:} REST API framework for model inference.
+    \item \textbf{TensorFlow/Keras:} Training and inference for the character-level CNN.
+    \item \textbf{scikit-learn:} Baseline model and dataset utilities.
+    \item \textbf{pandas/numpy:} Data manipulation and preprocessing.
+    \item \textbf{joblib:} Serialization of model artifacts.
+\end{itemize}
+
+\subsection{Technical Workflow}
+\textbf{Input Flow:} User text is preprocessed, tokenized at the character level, padded to a fixed length, and passed to the CNN for inference. The predicted label and confidence scores are returned as JSON to the frontend.
+
+\textbf{Modeling Details:} The CNN uses an embedding layer, two Conv1D layers with ReLU activations, max pooling, and a dense classifier head. Training uses early stopping on validation accuracy to avoid overfitting.
+
+\section{Future Enhancements and Roadmap}
+This roadmap focuses on improving robustness for short inputs, extending language coverage, and increasing accuracy using stronger architectures.
+\subsection{Known Limitations}
+\begin{itemize}
+    \item \textbf{Orthographic Similarity:} Cebuano and Hiligaynon share many words, causing confusion in short inputs.
+    \item \textbf{Short Text Sensitivity:} Very short phrases reduce classification reliability.
+    \item \textbf{Domain Shift:} Performance can drop when input is very informal or heavily code-mixed.
+    \item \textbf{Fixed Context Window:} Padding to a fixed length can truncate long inputs and reduce context.
+\end{itemize}
+
+\subsection{Planned Features and Improvements}
+\begin{itemize}
+    \item \textbf{Token-level Language Identification:} Identify language per token for mixed-language text.
+    \item \textbf{Expand Language Coverage:} Add Kinaray-a, Akeanon, and other regional languages.
+    \item \textbf{Model Enhancements:} Multi-kernel CNNs or transformer-based models for higher accuracy.
+    \item \textbf{Robust Evaluation:} Add a fixed holdout test set and per-class error analysis.
+    \item \textbf{Better Calibration:} Improve confidence calibration using temperature scaling or Platt scaling.
+\end{itemize}
+
+\end{document}

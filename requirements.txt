@@ -1,4 +1,4 @@
-# WikangAI Requirements
+# Linguahe Requirements
 # Philippine Language Identification System
 
 # Core ML and Data Science
